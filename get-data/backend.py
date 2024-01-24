@@ -95,16 +95,13 @@ def get_komentar_post():
             # pagination = Pagination(page=page, per_page=per_page, total=total_komen, css_framework='bootstrap4')
             # comment_display = comments[offset: offset + per_page]
             return render_template('resultKomen.html', komentar=comments)
+        else:
+            return render_template('index.html')
     else:
         with open('komentar.json', 'r') as file:
             komentar = json.load(file)
         return render_template('resultKomen.html', komentar=komentar)
 
-# @app.route('/get_komentar')
-# def get_komentar_data():
-#     with open('komentar.json', 'r') as file:
-#         komentar = json.load(file)
-#     return render_template('resultKomen.html', komentar=komentar)
 
 @app.route('/get_sentimen_prediksi', methods=['GET', 'POST'])
 def get_sentimen_prediksi():

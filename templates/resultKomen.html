@@ -100,16 +100,22 @@
                                         <td>{{komentar[i].text}}</td>
                                         <td>{{komentar[i].digg_count}}</td>
                                         <td>{{komentar[i].reply_comment_total}}</td>
-                                        {% if komentar[i].reply_comment is defined and komentar[i].reply_comment_total > 0 %}
+                                        {% if komentar[i].reply_comment is not none and komentar[i].reply_comment_total > 0 %}
                                         <td>
-                                            {% for j in range(komentar[i].reply_comment_total) %}
-                                            <ul>
-                                                <li>{{komentar[i].reply_comment[j].text}}</li>
-                                            </ul>
-                                            {% endfor %}
+                                            {% if komentar[i].reply_comment | default([]) | length > 0 %}
+                                                {% for j in range(komentar[i].reply_comment|length) %}
+                                                <ul>
+                                                    <li>{{komentar[i].reply_comment[j].text}}</li>
+                                                </ul>
+                                                {% endfor %}
+                                            {%else %}
+                                                <ul>
+                                                    <li>Terjadi Bug saat mengambil data</li>
+                                                </ul>
+                                            {% endif %}
                                         </td>
                                         {% else %}
-                                        <td class="text-uppercase">Tidak ada balasan</td>
+                                        <td class="text-uppercase text-bg-secondary">Tidak ada balasan</td>
                                         {% endif %}
                                     </tr>
                                     {% endfor %}
