@@ -16,17 +16,20 @@ tokenizer = AutoTokenizer.from_pretrained(pretrained)
 
 sentiment_analysis = pipeline("sentiment-analysis", model=model, tokenizer=tokenizer)
 
+#get user data
 async def fetch_user_data(username):
     async with PyTok() as api:
         user = api.user(username=username)
         user_data = await user.info()
         return user_data
 
+#save user data in json file
 async def fetch_and_save_user_data(username, user_filename="info_user.json"):
     user_data = await fetch_user_data(username)
     with open(user_filename, "w") as f:
         json.dump(user_data, f)
 
+# get comments
 async def get_comments(video_id, author_id):
     async with PyTok(headless=False) as api:
         comments = []
@@ -34,12 +37,14 @@ async def get_comments(video_id, author_id):
             comments.append(comment)
         return comments
 
+# parse tiktok link
 def parse_tiktok_link(tiktok_link):
     parts = tiktok_link.split('/')
     video_id = parts[-1]
     author_id = parts[3].replace('@', '')
     return video_id, author_id
 
+#mendapatkan text dari komentar
 def get_text_only(data):
     arr = []
     for i in data:
@@ -49,12 +54,14 @@ def get_text_only(data):
                 arr.append(j['text'])
     return arr
 
+#mendapatkan sentimen dari text
 def get_sentimen(text):
   label_index = {'LABEL_0': 'positive', 'LABEL_1': 'neutral', 'LABEL_2': 'negative'}
   result = sentiment_analysis(text)
   status = label_index[result[0]['label']]
   return status
 
+#save sentimen in json file
 def save_sentimen(text):
     arr = []
     for i in text:
